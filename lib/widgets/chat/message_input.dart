@@ -7,7 +7,7 @@ class MessageInput extends StatelessWidget {
   final _controller = TextEditingController();
 
   Future<void> _sendMessage(BuildContext ctx) async {
-    FocusScope.of(ctx).unfocus();
+    // FocusScope.of(ctx).unfocus();
     final user = await FirebaseAuth.instance.currentUser();
     final userData =
         await Firestore.instance.collection('users').document(user.uid).get();
@@ -24,12 +24,12 @@ class MessageInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(8.0),
       child: Row(
         children: <Widget>[
           Expanded(
             child: TextField(
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Message',
               ),
               onChanged: (value) {
@@ -43,7 +43,7 @@ class MessageInput extends StatelessWidget {
             builder: (_, String value, __) {
               return IconButton(
                 color: Theme.of(context).primaryColor,
-                icon: Icon(Icons.send),
+                icon: const Icon(Icons.send),
                 onPressed:
                     value.trim().isEmpty ? null : () => _sendMessage(context),
               );
