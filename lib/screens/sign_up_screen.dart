@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:chat_app/screens/auth_screen.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:chat_app/helpers/field_validators.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -14,16 +15,30 @@ class SignUpScreen extends StatelessWidget {
   Future<void> _handleSubmit(
     Map<String, String> state,
     BuildContext context,
+    File image,
   ) async {
     try {
       AuthResult authResult = await _auth.createUserWithEmailAndPassword(
         email: state['email'].trim(),
         password: state['password'].trim(),
       );
+      String url;
+      if (image != null) {
+        final ref = FirebaseStorage.instance
+            .ref()
+            .child('avatar')
+            .child('${authResult.user.uid}.jpg');
+        await ref.putFile(image).onComplete;
+        url = await ref.getDownloadURL();
+      }
       await Firestore.instance
           .collection('users')
           .document(authResult.user.uid)
-          .setData({'username': state['username'], 'email': state['email']});
+          .setData({
+        'username': state['username'],
+        'email': state['email'],
+        'url': url,
+      });
     } on PlatformException catch (err) {
       Scaffold.of(context).showSnackBar(
         SnackBar(
@@ -61,6 +76,7 @@ class AuthForm extends StatefulWidget {
   final Future<void> Function(
     Map<String, String> data,
     BuildContext context,
+    File image,
   ) handleSubmit;
 
   AuthForm({@required this.handleSubmit});
@@ -84,7 +100,7 @@ class _AuthFormState extends State<AuthForm> {
       setState(() {
         isLoading = true;
       });
-      await widget.handleSubmit(_formState, context);
+      await widget.handleSubmit(_formState, context, _image);
       setState(() {
         isLoading = false;
       });
@@ -92,7 +108,10 @@ class _AuthFormState extends State<AuthForm> {
   }
 
   Future<void> _pickImage() async {
-    final pickedImage = await _picker.getImage(source: ImageSource.camera);
+    final pickedImage = await _picker.getImage(
+      source: ImageSource.camera,
+      imageQuality: 50,
+    );
     setState(() {
       _image = File(pickedImage.path);
     });
