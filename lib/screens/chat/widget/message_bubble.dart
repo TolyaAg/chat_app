@@ -5,12 +5,14 @@ class MessageBubble extends StatelessWidget {
   final bool isMe;
   final Key key;
   final String username;
+  final String avatar;
 
   const MessageBubble({
     this.message,
     this.isMe,
     this.key,
     this.username,
+    this.avatar,
   }) : super(key: key);
 
   @override
@@ -18,6 +20,7 @@ class MessageBubble extends StatelessWidget {
     return Row(
       mainAxisAlignment: isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
       children: <Widget>[
+        if (!isMe) UserAvatar(avatar: avatar, username: username, isMe: isMe),
         Container(
           decoration: BoxDecoration(
             color: isMe
@@ -38,7 +41,7 @@ class MessageBubble extends StatelessWidget {
           ),
           margin: const EdgeInsets.symmetric(
             vertical: 4,
-            horizontal: 8,
+            // horizontal: 8,
           ),
           child: Column(
             crossAxisAlignment:
@@ -46,8 +49,9 @@ class MessageBubble extends StatelessWidget {
             children: <Widget>[
               Text(
                 username,
-                style: TextStyle(
+                style: const TextStyle(
                   fontWeight: FontWeight.bold,
+                  color: Colors.white,
                 ),
               ),
               Text(
@@ -59,7 +63,46 @@ class MessageBubble extends StatelessWidget {
             ],
           ),
         ),
+        if (isMe) UserAvatar(avatar: avatar, username: username, isMe: isMe),
       ],
+    );
+  }
+}
+
+class UserAvatar extends StatelessWidget {
+  const UserAvatar({
+    Key key,
+    @required this.avatar,
+    @required this.username,
+    @required this.isMe,
+  }) : super(key: key);
+
+  final String avatar;
+  final String username;
+  final bool isMe;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.symmetric(
+        horizontal: 8,
+        vertical: 4,
+      ),
+      child: CircleAvatar(
+        child: avatar == null
+            ? Text(
+                username[0],
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              )
+            : null,
+        backgroundImage: avatar != null ? NetworkImage(avatar) : null,
+        backgroundColor: isMe
+            ? Theme.of(context).accentColor
+            : Theme.of(context).primaryColor,
+      ),
     );
   }
 }

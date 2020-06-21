@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'package:chat_app/screens/auth_screen.dart';
-import 'package:chat_app/screens/chat_screen.dart';
+import 'package:chat_app/screens/chat/chat_screen.dart';
 
 void main() => runApp(MyApp());
 
@@ -23,6 +23,7 @@ class MyApp extends StatelessWidget {
             borderRadius: BorderRadius.circular(20),
           ),
         ),
+        visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: StreamBuilder(
         stream: FirebaseAuth.instance.onAuthStateChanged,

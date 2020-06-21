@@ -1,11 +1,36 @@
-import 'package:chat_app/widgets/chat/message_input.dart';
-import 'package:chat_app/widgets/chat/messages.dart';
+import './widget/message_input.dart';
+import './widget/messages.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
 enum AuthAction { SignOut }
 
-class ChatScreen extends StatelessWidget {
+class ChatScreen extends StatefulWidget {
+  @override
+  _ChatScreenState createState() => _ChatScreenState();
+}
+
+class _ChatScreenState extends State<ChatScreen> {
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+
+  @override
+  void initState() {
+    _firebaseMessaging.requestNotificationPermissions();
+    _firebaseMessaging.configure(
+      onMessage: (message) async {
+        print('onMessage $message');
+      },
+      onLaunch: (message) async {
+        print('onLaunch: $message');
+      },
+      onResume: (message) async {
+        print('onResume: $message');
+      },
+    );
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -13,6 +38,7 @@ class ChatScreen extends StatelessWidget {
         title: Text('Chat'),
         actions: <Widget>[
           DropdownButton(
+            underline: SizedBox(),
             icon: Icon(
               Icons.more_vert,
               color: Theme.of(context).primaryIconTheme.color,

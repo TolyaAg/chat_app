@@ -5,17 +5,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 
 class AuthScreen extends StatelessWidget {
-  final _auth = FirebaseAuth.instance;
-
   Future<void> _handleSubmit(
     Map<String, String> state,
     BuildContext context,
   ) async {
     try {
-      await _auth.signInWithEmailAndPassword(
+      final authResult = await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: state['email'].trim(),
         password: state['password'].trim(),
       );
+      authResult.user.reload();
     } on PlatformException catch (err) {
       Scaffold.of(context).showSnackBar(
         SnackBar(

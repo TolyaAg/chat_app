@@ -16,6 +16,7 @@ class MessageInput extends StatelessWidget {
       'timestamp': Timestamp.now(),
       'userId': user.uid,
       'username': userData['username'],
+      'avatar': userData['url'],
     });
     _controller.clear();
     _messageNotifier.value = '';

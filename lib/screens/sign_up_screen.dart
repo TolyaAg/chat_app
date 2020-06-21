@@ -39,6 +39,7 @@ class SignUpScreen extends StatelessWidget {
         'email': state['email'],
         'url': url,
       });
+      authResult.user.reload();
     } on PlatformException catch (err) {
       Scaffold.of(context).showSnackBar(
         SnackBar(

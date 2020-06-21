@@ -1,4 +1,4 @@
-import 'package:chat_app/widgets/chat/message_bubble.dart';
+import './message_bubble.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -33,11 +33,13 @@ class Messages extends StatelessWidget {
                 final message = chatDocs[index]['text'];
                 final userId = chatDocs[index]['userId'];
                 final username = chatDocs[index]['username'];
+                final avatar = chatDocs[index]['avatar'];
                 final isMe = userId == futureSnapshot.data.uid;
                 return MessageBubble(
                   username: username,
                   message: message,
                   isMe: isMe,
+                  avatar: avatar,
                   key: ValueKey(chatDocs[index].documentID),
                 );
               },
