@@ -16,6 +16,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   void initState() {
+    super.initState();
     _firebaseMessaging.requestNotificationPermissions();
     _firebaseMessaging.configure(
       onMessage: (message) async {
@@ -28,7 +29,7 @@ class _ChatScreenState extends State<ChatScreen> {
         print('onResume: $message');
       },
     );
-    super.initState();
+    _firebaseMessaging.subscribeToTopic('chat');
   }
 
   @override
